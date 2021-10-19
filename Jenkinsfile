@@ -1,28 +1,33 @@
 pipeline {
     agent any
     stages {
-        dir('./maven_learning') {
-            stage('Build stage') {
+
+        stage('Build stage') {
+            dir('./maven_learning') {
                 steps {
                     sh 'mvn clean compile'
                 }
             }
         }
 
-        dir('./maven_learning') {
-            stage('Test stage') {
+
+        stage('Test stage') {
+            dir('./maven_learning') {
                 steps {
                     sh 'mvn test'
                 }
             }
+
         }
 
-        dir('./maven_learning') {
-            stage('Package stage') {
+
+        stage('Package stage') {
+            dir('./maven_learning') {
                 steps {
                     sh 'mvn package jar:jar'
                 }
             }
         }
+
     }
 }
