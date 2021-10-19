@@ -1,0 +1,57 @@
+version: '3'
+services:
+  jenkins-dev:
+    image: jenkins/jenkins:lts
+    ports:
+      - 8085:8080
+      - 5000:5000
+    volumes:
+      - D:\DEV\jenkins:/var/jenkins_home
+
+  postgres-dev:
+    image: postgres:latest
+    environment:
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - 5432:5432
+    volumes:
+      - D:\DEV\postgres\postgres-data:/var/lib/postgresql/data
+
+  sonarqube-dev:
+    image: sonarqube:lts-community
+    depends_on:
+      - init
+      - postgres-dev
+    environment:
+      SONAR_JDBC_URL: jdbc:postgresql://postgres-dev:5432/sonar
+      SONAR_JDBC_USERNAME: postgres
+      SONAR_JDBC_PASSWORD: postgres
+    ports:
+      - 9000:9000
+    volumes:
+      - sonarqube_data:/opt/sonarqube/data
+      - sonarqube_extensions:/opt/sonarqube/extensions
+      - sonarqube_logs:/opt/sonarqube/logs
+
+  init:
+    image: bash
+    privileged: true
+    user: root
+    volumes:
+      - D:\DEV\init\sonarqube_script\init.sh:/mnt/init.sh
+    command: ["sh", "-e", "/mnt/init.sh"]
+
+  init_postgres:
+    image: bash
+    privileged: true
+    user: root
+    volumes:
+      - D:\DEV\postgres\init-database.sh:/tmp/init-database.sh
+    command: ["sh", "-e", "/tmp/init-database.sh"]
+
+
+volumes:
+  sonarqube_data:
+  sonarqube_extensions:
+  sonarqube_logs:
+
