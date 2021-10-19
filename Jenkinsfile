@@ -3,27 +3,25 @@ pipeline {
     stages {
 
         stage('Build stage') {
-            dir('./maven_learning') {
-                steps {
+            steps {
+                dir('./maven_learning') {
                     sh 'mvn clean compile'
                 }
             }
         }
 
-
         stage('Test stage') {
-            dir('./maven_learning') {
-                steps {
+            steps {
+                dir('./maven_learning') {
                     sh 'mvn test'
                 }
             }
-
         }
 
 
         stage('Package stage') {
-            dir('./maven_learning') {
-                steps {
+            steps {
+                dir('./maven_learning') {
                     sh 'mvn package jar:jar'
                 }
             }
